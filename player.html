@@ -8,12 +8,8 @@
     <title>Reproductor de Videos</title>
 
     <!-- Cargar Firebase App y Storage desde CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
-</head>
-<body>
-    
-    <video id="videoPlayer" controls></video>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     
     <script>
         // Configuración de Firebase
@@ -30,45 +26,33 @@
         firebase.initializeApp(firebaseConfig);
         const storage = firebase.storage();
 
-        let videoList = [];
-        let currentVideoIndex = 0;
+        function loadVideos() {
+            const videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
 
-        // Función para obtener videos de Firebase Storage
-        function fetchVideos() {
-            const storageRef = storage.ref('videos');
-
-            storageRef.listAll().then((res) => {
-                res.items.forEach((itemRef) => {
-                    // Obtener la URL de descarga de cada video
-                    itemRef.getDownloadURL().then((url) => {
-                        videoList.push(url);
-                        // Iniciar reproducción cuando todos los videos estén cargados
-                        if (videoList.length === res.items.length) {
-                            playVideos();
-                        }
+            storage.ref('videos').listAll().then((result) => {
+                result.items.forEach((videoRef) => {
+                    videoRef.getDownloadURL().then((url) => {
+                        const videoElement = document.createElement("video");
+                        videoElement.src = url;
+                        videoElement.controls = true;
+                        videoElement.loop = true; // Habilitar el bucle
+                        videoElement.width = 600;
+                        videoList.appendChild(videoElement);
+                    }).catch((error) => {
+                        console.error("Error al obtener la URL del video: ", error);
                     });
                 });
             }).catch((error) => {
-                console.error("Error al obtener videos: ", error);
+                console.error("Error al listar los videos: ", error);
             });
         }
 
-        // Función para reproducir videos en bucle
-        function playVideos() {
-            const videoElement = document.getElementById("videoPlayer");
-            videoElement.src = videoList[currentVideoIndex];
-            videoElement.play();
-
-            // Pasar al siguiente video cuando termine el actual
-            videoElement.onended = () => {
-                currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
-                videoElement.src = videoList[currentVideoIndex];
-                videoElement.play();
-            };
-        }
-
-        // Iniciar la carga de videos cuando la página se cargue
-        window.onload = fetchVideos;
+        window.onload = loadVideos;
     </script>
+</head>
+<body>
+    <h1>Reproductor de Videos</h1>
+    <div id="videoList" class="container"></div>
 </body>
 </html>
