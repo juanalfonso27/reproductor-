@@ -5,64 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Cargar Videos</title>
+</head>
+<body>
+    <h1>Cargar Videos</h1>
+    <div class="container">
+        <input type="file" id="videoFiles" multiple accept="video/*">
+        <button id="uploadButton">Subir Videos</button>
+        <button class="btn-secondary" id="playerButton">Ir al Reproductor</button>
+    </div>
 
     <!-- Cargar Firebase App y Storage desde CDN (sin usar módulos) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
 
     <script>
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBSMzKJYdRgA_JM9lX0pUhfvwkZ5nAOBRM",
-            authDomain: "reproductor-b1420.firebaseapp.com",
-            projectId: "reproductor-b1420",
-            storageBucket: "reproductor-b1420.appspot.com",
-            messagingSenderId: "60164868284",
-            appId: "1:60164868284:web:0f94e7e49eb6ee55bfe8b9"
-        };
+        // Esperar a que Firebase se cargue completamente antes de usarla
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuración de Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyBSMzKJYdRgA_JM9lX0pUhfvwkZ5nAOBRM",
+                authDomain: "reproductor-b1420.firebaseapp.com",
+                projectId: "reproductor-b1420",
+                storageBucket: "reproductor-b1420.appspot.com",
+                messagingSenderId: "60164868284",
+                appId: "1:60164868284:web:0f94e7e49eb6ee55bfe8b9"
+            };
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
+            // Inicializar Firebase
+            firebase.initializeApp(firebaseConfig);
+            const storage = firebase.storage();
 
-        // Obtener referencia al servicio de Storage
-        const storage = firebase.storage();
+            // Función para subir videos
+            function uploadVideos() {
+                const files = document.getElementById("videoFiles").files;
 
-        function uploadVideos() {
-            const files = document.getElementById("videoFiles").files;
+                if (files.length === 0) {
+                    alert("Selecciona al menos un video para subir.");
+                    return;
+                }
 
-            if (files.length === 0) {
-                alert("Selecciona al menos un video para subir.");
-                return;
+                if (files.length > 10) {
+                    alert("Solo puedes subir hasta 10 videos.");
+                    return;
+                }
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const storageRef = storage.ref(`videos/${file.name}`);
+
+                    storageRef.put(file).then((snapshot) => {
+                        console.log(`Video ${file.name} subido correctamente.`);
+                    }).catch((error) => {
+                        console.error("Error al subir el video: ", error);
+                    });
+                }
             }
 
-            if (files.length > 10) {
-                alert("Solo puedes subir hasta 10 videos.");
-                return;
-            }
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const storageRef = storage.ref(`videos/${file.name}`);
-
-                storageRef.put(file).then((snapshot) => {
-                    console.log(`Video ${file.name} subido correctamente.`);
-                }).catch((error) => {
-                    console.error("Error al subir el video: ", error);
-                });
-            }
-        }
-
-        function goToPlayer() {
-            window.location.href = "player.html"; 
-        }
+            // Asignar los eventos a los botones
+            document.getElementById("uploadButton").addEventListener('click', uploadVideos);
+            document.getElementById("playerButton").addEventListener('click', function() {
+                window.location.href = "player.html"; 
+            });
+        });
     </script>
-</head>
-<body>
-    <h1>Cargar Videos</h1>
-    <div class="container">
-        <input type="file" id="videoFiles" multiple accept="video/*">
-        <button onclick="uploadVideos()">Subir Videos</button>
-        <button class="btn-secondary" onclick="goToPlayer()">Ir al Reproductor</button>
-    </div>
 </body>
 </html>
+
