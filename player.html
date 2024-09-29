@@ -59,21 +59,26 @@
                 playVideo();
             };
 
-            videoElement.onfullscreenchange = () => {
-                if (document.fullscreenElement) {
-                    videoElement.requestFullscreen();
-                }
-            };
-
             const videoList = document.getElementById("videoList");
             videoList.innerHTML = "";
             videoList.appendChild(videoElement);
 
             // Mantener pantalla completa al cambiar de video
             if (document.fullscreenElement) {
-                videoElement.requestFullscreen();
+                videoElement.requestFullscreen().catch((err) => {
+                    console.error("Error al solicitar pantalla completa:", err);
+                });
             }
         }
+
+        document.addEventListener('click', () => {
+            const videoElement = document.querySelector('video');
+            if (videoElement && !document.fullscreenElement) {
+                videoElement.requestFullscreen().catch((err) => {
+                    console.error("Error al solicitar pantalla completa:", err);
+                });
+            }
+        });
 
         window.onload = loadVideos;
     </script>
