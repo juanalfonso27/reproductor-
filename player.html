@@ -59,9 +59,20 @@
                 playVideo();
             };
 
+            videoElement.onfullscreenchange = () => {
+                if (document.fullscreenElement) {
+                    videoElement.requestFullscreen();
+                }
+            };
+
             const videoList = document.getElementById("videoList");
             videoList.innerHTML = "";
             videoList.appendChild(videoElement);
+
+            // Mantener pantalla completa al cambiar de video
+            if (document.fullscreenElement) {
+                videoElement.requestFullscreen();
+            }
         }
 
         window.onload = loadVideos;
@@ -72,3 +83,4 @@
     <div id="videoList" class="container"></div>
 </body>
 </html>
+
