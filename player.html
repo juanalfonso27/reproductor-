@@ -59,22 +59,22 @@
                 playVideo();
             };
 
-            const videoList = document.getElementById("videoList");
-            videoList.innerHTML = "";
-            videoList.appendChild(videoElement);
+            const videoContainer = document.getElementById("videoContainer");
+            videoContainer.innerHTML = "";
+            videoContainer.appendChild(videoElement);
 
             // Mantener pantalla completa al cambiar de video
             if (document.fullscreenElement) {
-                videoElement.requestFullscreen().catch((err) => {
+                videoContainer.requestFullscreen().catch((err) => {
                     console.error("Error al solicitar pantalla completa:", err);
                 });
             }
         }
 
         document.addEventListener('click', () => {
-            const videoElement = document.querySelector('video');
-            if (videoElement && !document.fullscreenElement) {
-                videoElement.requestFullscreen().catch((err) => {
+            const videoContainer = document.getElementById("videoContainer");
+            if (videoContainer && !document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch((err) => {
                     console.error("Error al solicitar pantalla completa:", err);
                 });
             }
@@ -85,7 +85,7 @@
 </head>
 <body>
     <h1>Reproductor de Videos</h1>
-    <div id="videoList" class="container"></div>
+    <div id="videoContainer" class="container"></div>
 </body>
 </html>
 
