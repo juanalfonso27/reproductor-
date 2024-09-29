@@ -5,50 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Reproductor de Videos</title>
+
+    <!-- Cargar Firebase App y Storage desde CDN -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
-   
-    
 </head>
 <body>
     
     <video id="videoPlayer" controls></video>
+    
     <script>
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Importar Firebase Firestore si necesitas base de datos en tiempo real
-import { getFirestore } from "firebase/firestore";
-
-// Importar Firebase Storage para subir y almacenar los videos
-import { getStorage } from "firebase/storage";
-        // Configuración de Firebase
-       // Your web app's Firebase configuration
         // Configuración de Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyBSMzKJYdRgA_JM9lX0pUhfvwkZ5nAOBRM",
-  authDomain: "reproductor-b1420.firebaseapp.com",
-  projectId: "reproductor-b1420",
-  storageBucket: "reproductor-b1420.appspot.com",
-  messagingSenderId: "60164868284",
-  appId: "1:60164868284:web:0f94e7e49eb6ee55bfe8b9"
-};
+            apiKey: "AIzaSyBSMzKJYdRgA_JM9lX0pUhfvwkZ5nAOBRM",
+            authDomain: "reproductor-b1420.firebaseapp.com",
+            projectId: "reproductor-b1420",
+            storageBucket: "reproductor-b1420.appspot.com",
+            messagingSenderId: "60164868284",
+            appId: "1:60164868284:web:0f94e7e49eb6ee55bfe8b9"
+        };
 
         // Inicializar Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const storage = firebase.storage();
 
         let videoList = [];
         let currentVideoIndex = 0;
 
+        // Función para obtener videos de Firebase Storage
         function fetchVideos() {
             const storageRef = storage.ref('videos');
 
             storageRef.listAll().then((res) => {
                 res.items.forEach((itemRef) => {
+                    // Obtener la URL de descarga de cada video
                     itemRef.getDownloadURL().then((url) => {
                         videoList.push(url);
+                        // Iniciar reproducción cuando todos los videos estén cargados
                         if (videoList.length === res.items.length) {
                             playVideos();
                         }
@@ -59,11 +52,13 @@ import { getStorage } from "firebase/storage";
             });
         }
 
+        // Función para reproducir videos en bucle
         function playVideos() {
             const videoElement = document.getElementById("videoPlayer");
             videoElement.src = videoList[currentVideoIndex];
             videoElement.play();
 
+            // Pasar al siguiente video cuando termine el actual
             videoElement.onended = () => {
                 currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
                 videoElement.src = videoList[currentVideoIndex];
@@ -71,6 +66,7 @@ import { getStorage } from "firebase/storage";
             };
         }
 
+        // Iniciar la carga de videos cuando la página se cargue
         window.onload = fetchVideos;
     </script>
 </body>
