@@ -27,6 +27,7 @@
 
         function uploadVideos() {
             const files = document.getElementById("videoFiles").files;
+            const progressBar = document.getElementById("progressBar");
 
             if (files.length === 0) {
                 alert("Selecciona al menos un video para subir.");
@@ -41,11 +42,16 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const storageRef = storage.ref(`videos/${file.name}`);
+                const uploadTask = storageRef.put(file);
 
-                storageRef.put(file).then((snapshot) => {
-                    console.log(`Video ${file.name} subido correctamente.`);
-                }).catch((error) => {
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.value = progress;
+                    console.log(`Progreso de carga: ${progress}%`);
+                }, (error) => {
                     console.error("Error al subir el video: ", error);
+                }, () => {
+                    console.log(`Video ${file.name} subido correctamente.`);
                 });
             }
         }
@@ -59,8 +65,10 @@
     <h1>Cargar Videos</h1>
     <div class="container">
         <input type="file" id="videoFiles" multiple accept="video/*">
+        <progress id="progressBar" value="0" max="100"></progress>
         <button onclick="uploadVideos()">Subir Videos</button>
         <button class="btn-secondary" onclick="goToPlayer()">Ir al Reproductor</button>
     </div>
 </body>
 </html>
+
