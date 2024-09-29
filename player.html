@@ -62,6 +62,15 @@
 
             // Mantener pantalla completa al cambiar de video
             if (document.fullscreenElement) {
+                // Si ya está en pantalla completa, salir de pantalla completa y volver a entrar
+                document.exitFullscreen().then(() => {
+                    videoContainer.requestFullscreen().catch((err) => {
+                        console.error("Error al solicitar pantalla completa:", err);
+                    });
+                }).catch((err) => {
+                    console.error("Error al salir de pantalla completa:", err);
+                });
+            } else {
                 videoContainer.requestFullscreen().catch((err) => {
                     console.error("Error al solicitar pantalla completa:", err);
                 });
