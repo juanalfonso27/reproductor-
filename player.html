@@ -31,8 +31,10 @@
             videoList.innerHTML = "";
 
             storage.ref('videos').listAll().then((result) => {
+                console.log("Videos encontrados:", result.items.length);
                 result.items.forEach((videoRef) => {
                     videoRef.getDownloadURL().then((url) => {
+                        console.log("URL del video:", url);
                         const videoElement = document.createElement("video");
                         videoElement.src = url;
                         videoElement.controls = true;
