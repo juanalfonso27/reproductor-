@@ -10,7 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     
-    <script>
+   <script>
         // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBSMzKJYdRgA_JM9lX0pUhfvwkZ5nAOBRM",
@@ -62,15 +62,6 @@
 
             // Mantener pantalla completa al cambiar de video
             if (document.fullscreenElement) {
-                // Si ya está en pantalla completa, salir de pantalla completa y volver a entrar
-                document.exitFullscreen().then(() => {
-                    videoContainer.requestFullscreen().catch((err) => {
-                        console.error("Error al solicitar pantalla completa:", err);
-                    });
-                }).catch((err) => {
-                    console.error("Error al salir de pantalla completa:", err);
-                });
-            } else {
                 videoContainer.requestFullscreen().catch((err) => {
                     console.error("Error al solicitar pantalla completa:", err);
                 });
