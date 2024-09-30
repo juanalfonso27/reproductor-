@@ -10,29 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        #videoContainer {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: black;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
-
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
@@ -52,6 +29,9 @@
         let currentVideoIndex = 0;
 
         function loadVideos() {
+            const videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
+
             storage.ref('videos').listAll().then((result) => {
                 console.log("Videos encontrados:", result.items.length);
                 let promises = result.items.map((videoRef) => videoRef.getDownloadURL());
@@ -72,38 +52,23 @@
             const videoElement = document.createElement("video");
             videoElement.src = videoUrls[currentVideoIndex];
             videoElement.controls = true;
+            videoElement.width = 600;
             videoElement.autoplay = true;
             videoElement.onended = () => {
                 currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
                 playVideo();
             };
 
-            const videoContainer = document.getElementById("videoContainer");
-            videoContainer.innerHTML = "";
-            videoContainer.appendChild(videoElement);
-
-            // Mantener pantalla completa al cambiar de video
-            if (document.fullscreenElement) {
-                videoContainer.requestFullscreen().catch((err) => {
-                    console.error("Error al solicitar pantalla completa:", err);
-                });
-            }
+            const videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
+            videoList.appendChild(videoElement);
         }
-
-        document.addEventListener('click', () => {
-            const videoContainer = document.getElementById("videoContainer");
-            if (videoContainer && !document.fullscreenElement) {
-                videoContainer.requestFullscreen().catch((err) => {
-                    console.error("Error al solicitar pantalla completa:", err);
-                });
-            }
-        });
 
         window.onload = loadVideos;
     </script>
 </head>
 <body>
     <h1>Reproductor de Videos</h1>
-    <div id="videoContainer" class="container"></div>
+    <div id="videoList" class="container"></div>
 </body>
 </html>
