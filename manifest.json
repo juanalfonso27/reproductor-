@@ -1,0 +1,21 @@
+{
+    "name": "Reproductor de Videos",
+    "short_name": "Reproductor",
+    "description": "Una aplicación para cargar y reproducir videos.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#007bff",
+    "icons": [
+        {
+            "src": "descargaLOGO.png",
+            "type": "image/png",
+            "sizes": "192x192"
+          },
+          {
+            "src": "d.png",
+            "type": "image/png",
+            "sizes": "512x512"
+          }
+        ]
+      }
