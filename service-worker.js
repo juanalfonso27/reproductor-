@@ -3,17 +3,23 @@
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open('video-cache').then((cache) => {
-            const storageRef = firebase.storage().ref();
-            const videoNames = ['video1.mp4', 'video2.mp4']; // Lista de nombres de videos
+            const storageRef = firebase.storage().ref('videos'); // Referencia al directorio de videos
 
-            const urlPromises = videoNames.map((videoName) => {
-                return storageRef.child(`videos/${videoName}`).getDownloadURL();
-            });
+            // Obtener la lista de archivos en el directorio de videos
+            return storageRef.listAll().then((result) => {
+                const urlPromises = result.items.map((itemRef) => {
+                    return itemRef.getDownloadURL().catch((error) => {
+                        console.error(`Error al obtener la URL de ${itemRef.name}:`, error);
+                    });
+                });
 
-            return Promise.all(urlPromises).then((urls) => {
-                return cache.addAll(urls);
+                return Promise.all(urlPromises).then((urls) => {
+                    // Filtrar URLs undefined
+                    const validUrls = urls.filter(url => url !== undefined);
+                    return cache.addAll(validUrls);
+                });
             }).catch((error) => {
-                console.error('Error al obtener las URLs de los videos:', error);
+                console.error('Error al listar los archivos:', error);
             });
         })
     );
@@ -26,5 +32,3 @@ self.addEventListener('fetch', (event) => {
         })
     );
 });
-
-
