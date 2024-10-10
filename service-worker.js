@@ -1,5 +1,9 @@
 const CACHE_NAME = 'video-cache-v1';
-const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50 MB
+const urlsToCache = [
+  // Lista de URLs de los videos que quieres cachear, por ejemplo:
+  // '/videos/video1.mp4',
+  // '/videos/video2.mp4'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
