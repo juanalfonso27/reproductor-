@@ -1,11 +1,18 @@
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open('video-cache').then((cache) => {
-            return cache.addAll([
-                '/path/to/video1.mp4',
-                '/path/to/video2.mp4',
-                // Agrega aquí las rutas de los videos que quieres cachear
-            ]);
+            const storageRef = firebase.storage().ref();
+            const videoNames = ['video1.mp4', 'video2.mp4']; // Lista de nombres de videos
+
+            const urlPromises = videoNames.map((videoName) => {
+                return storageRef.child(`videos/${videoName}`).getDownloadURL();
+            });
+
+            return Promise.all(urlPromises).then((urls) => {
+                return cache.addAll(urls);
+            }).catch((error) => {
+                console.error('Error al obtener las URLs de los videos:', error);
+            });
         })
     );
 });
