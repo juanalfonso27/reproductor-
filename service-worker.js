@@ -3,6 +3,7 @@ const urlsToCache = [
   // Lista de URLs de los videos que quieres cachear, por ejemplo:
   // '/videos/video1.mp4',
   // '/videos/video2.mp4'
+  https://console.firebase.google.com/project/reproductor-b1420/storage/reproductor-b1420.appspot.com/files/~2Fvideos?hl=es-419
 ];
 
 self.addEventListener('install', (event) => {
