@@ -1,35 +1,21 @@
-const CACHE_NAME = 'video-cache-v1';
-const urlsToCache = [
-
-];
-
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
-  );
+    event.waitUntil(
+        caches.open('video-cache').then((cache) => {
+            return cache.addAll([
+                '/path/to/video1.mp4',
+                '/path/to/video2.mp4',
+                // Agrega aquí las rutas de los videos que quieres cachear
+            ]);
+        })
+    );
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          if (event.request.url.startsWith('http')) {
-            cache.put(event.request, responseToCache);
-          }
-        });
-        return response;
-      });
-    })
-  );
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });
+
 
