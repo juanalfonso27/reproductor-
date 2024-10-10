@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/manifest.json">
-
     <title>Cargar Videos</title>
-
-    <!-- Cargar Firebase App y Storage desde CDN -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-    
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
@@ -61,6 +57,19 @@
         function goToPlayer() {
             window.location.href = "player.html"; 
         }
+
+        // Registrar el Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registrado con éxito:', registration);
+                    })
+                    .catch((error) => {
+                        console.log('Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
     </script>
 </head>
 <body>
@@ -73,4 +82,3 @@
     </div>
 </body>
 </html>
-
