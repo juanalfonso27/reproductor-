@@ -1,7 +1,6 @@
 const CACHE_NAME = 'video-cache-v1';
 const urlsToCache = [
-gs://reproductor-b1420.appspot.com/videos
-  https://console.firebase.google.com/project/reproductor-b1420/storage/reproductor-b1420.appspot.com/files/~2Fvideos?hl=es-419
+
 ];
 
 self.addEventListener('install', (event) => {
