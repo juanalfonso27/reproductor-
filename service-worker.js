@@ -1,8 +1,6 @@
 const CACHE_NAME = 'video-cache-v1';
 const urlsToCache = [
-  '/videos/video1.mp4',
-  '/videos/video2.mp4',
-  '/videos/video3.mp4'
+https://firebasestorage.googleapis.com/v0/b/reproductor-b1420.appspot.com/o/videos%2FIASA%20-%20RESUMEN%20INNOVAR%202024%20FINAL%20ALTA%20PT.3.mp4?alt=media&token=dc8a8840-d56b-4f78-8469-56f3e1f88d0f
 ];
 
 self.addEventListener('install', (event) => {
