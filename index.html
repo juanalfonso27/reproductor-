@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/manifest.json">
     <title>Cargar Videos</title>
@@ -52,6 +52,18 @@
                     console.error("Error al subir el video: ", error);
                 }, () => {
                     console.log(`Video ${file.name} subido correctamente.`);
+                    
+                    // Obtener la URL del video subido
+                    storageRef.getDownloadURL().then((url) => {
+                        // Enviar mensaje al Service Worker para cachear el video
+                        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                            navigator.serviceWorker.controller.postMessage({
+                                action: 'cacheVideo',
+                                url: url
+                            });
+                            console.log(`Solicitud enviada al Service Worker para cachear: ${url}`);
+                        }
+                    });
                 });
             }
         }
@@ -81,4 +93,3 @@
     </div>
 </body>
 </html>
-
