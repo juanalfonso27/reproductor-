@@ -10,6 +10,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <h1>Cargar Videos</h1>
+    <div class="container">
+        <input type="file" id="videoFiles" multiple accept="video/*">
+        <progress id="progressBar" value="0" max="100"></progress>
+        <button onclick="uploadVideos()">Subir Videos</button>
+        <button class="btn-secondary" onclick="goToPlayer()">Ir al Reproductor</button>
+    </div>
+
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
@@ -72,6 +82,7 @@
             window.location.href = "player.html"; 
         }
 
+        // Registro del Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js')
                 .then((registration) => {
@@ -82,14 +93,5 @@
                 });
         }
     </script>
-</head>
-<body>
-    <h1>Cargar Videos</h1>
-    <div class="container">
-        <input type="file" id="videoFiles" multiple accept="video/*">
-        <progress id="progressBar" value="0" max="100"></progress>
-        <button onclick="uploadVideos()">Subir Videos</button>
-        <button class="btn-secondary" onclick="goToPlayer()">Ir al Reproductor</button>
-    </div>
 </body>
 </html>
