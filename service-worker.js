@@ -1,29 +1,56 @@
 const CACHE_NAME = 'video-cache-v1';
 const urlsToCache = [
-https://console.firebase.google.com/project/reproductor-b1420/storage/reproductor-b1420.appspot.com/files/~2Fvideos?hl=es-419,
-  '/videos/video2.mp4',
-  '/videos/video3.mp4',
-  '/videos/video4.mp4'
+    // Aquí puedes agregar rutas estáticas si es necesario
 ];
 
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+// Instalación del Service Worker
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                console.log('Archivos cacheados');
+                return cache.addAll(urlsToCache);
+            })
+    );
 });
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        if (response) {
-          return response; // Si el archivo está en caché, úsalo.
-        }
-        return fetch(event.request); // Si no está en caché, descárgalo.
-      })
-  );
+// Activación del Service Worker
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        console.log('Eliminando caché antigua', cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
+
+// Interceptar solicitudes de red para verificar si están cacheadas
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then((response) => {
+                if (response) {
+                    return response; // Si está en caché, devuelve la respuesta cacheada
+                }
+                return fetch(event.request); // Si no, realiza la solicitud de red
+            })
+    );
+});
+
+// Escuchar mensajes del script principal (por ejemplo, para cachear videos subidos)
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.action === 'cacheVideo') {
+        const videoUrl = event.data.url;
+        caches.open(CACHE_NAME).then((cache) => {
+            cache.add(videoUrl).then(() => {
+                console.log(`Video cacheado: ${videoUrl}`);
+            });
+        });
+    }
 });
