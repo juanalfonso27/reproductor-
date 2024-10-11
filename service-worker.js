@@ -1,6 +1,6 @@
 const CACHE_NAME = 'video-cache-v1';
 const urlsToCache = [
-  'https://console.firebase.google.com/project/reproductor-b1420/storage/reproductor-b1420.appspot.com/files/~2Fvideos?hl=es-419',
+https://console.firebase.google.com/project/reproductor-b1420/storage/reproductor-b1420.appspot.com/files/~2Fvideos?hl=es-419,
   '/videos/video2.mp4',
   '/videos/video3.mp4',
   '/videos/video4.mp4'
