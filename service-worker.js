@@ -1,5 +1,5 @@
 const CACHE_NAME = 'video-cache';
-const MAX_CACHE_SIZE = 5;  // Define un límite de videos en caché
+const MAX_CACHE_SIZE = 9;  // Define un límite de videos en caché
 
 self.addEventListener('fetch', event => {
   event.respondWith(
