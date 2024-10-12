@@ -1,28 +1,20 @@
-const CACHE_NAME = 'video-cache';
-const MAX_CACHE_SIZE = 9;  // Define un límite de videos en caché
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.match(event.request).then(response => {
-        if (response) {
-          return response;
-        } else {
-          return fetch(event.request).then(networkResponse => {
-            return cache.put(event.request, networkResponse.clone()).then(() => {
-              return cache.keys().then(keys => {
-                if (keys.length > MAX_CACHE_SIZE) {
-                  // Elimina el video más antiguo en el caché
-                  cache.delete(keys[0]);
-                }
-                return networkResponse;
-              });
-            });
-          });
-        }
-      });
-    })
-  );
+self.addEventListener('message', event => {
+  if (event.data.action === 'cacheVideo') {
+      cacheVideo(event.data.url);
+  }
 });
 
-
+async function cacheVideo(videoUrl) {
+  try {
+      const cache = await caches.open('video-cache');
+      const response = await fetch(videoUrl, { mode: 'cors' }); // Habilitar CORS
+      if (response.ok) {
+          await cache.put(videoUrl, response);
+          console.log(`Video cacheado exitosamente: ${videoUrl}`);
+      } else {
+          console.error('Error al obtener el video:', response.status);
+      }
+  } catch (error) {
+      console.error('Error al cachear el video:', error);
+  }
+}
