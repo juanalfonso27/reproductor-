@@ -23,11 +23,14 @@ h1 {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 70%;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+    border-radius: 12px; /* Bordes redondeados */
+    width: 80%; /* Ancho un poco mayor */
+    max-width: 1200px; /* Ancho máximo */
+    margin: 0 auto; /* Centrar el contenedor */
 }
+
 
 /* Estilos para el input y botones */
 input[type="file"] {
