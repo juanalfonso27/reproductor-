@@ -1,6 +1,9 @@
 /* Estilos generales */
 body {
-    font-family: Arial, sans-serif;
+      font-family: Arial, sans-serif;
+    background-image: url(iasa.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
     margin: 0;
     padding: 0;
     display: flex;
@@ -8,7 +11,9 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f0f0f0;
+
+    
+  
 }
 
 h1 {
