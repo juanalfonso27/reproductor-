@@ -25,6 +25,16 @@ async function cacheVideo(videoUrl) {
     }
 }
 
+// Limitar el tamaño de la caché
+async function limitCacheSize(cacheName, maxItems) {
+    const cache = await caches.open(cacheName);
+    const keys = await cache.keys();
+    if (keys.length > maxItems) {
+        await cache.delete(keys[0]);
+        limitCacheSize(cacheName, maxItems);
+    }
+}
+
 // Evento fetch para interceptar las solicitudes de video y usar la caché
 self.addEventListener('fetch', event => {
     if (event.request.url.includes('/videos/')) {  // Asegurarse de que sea una URL de video
@@ -44,4 +54,3 @@ self.addEventListener('fetch', event => {
         );
     }
 });
-
