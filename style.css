@@ -1,7 +1,7 @@
 /* Estilos generales */
 body {
-      font-family: Arial, sans-serif;
-    background-image: url(iasa.jpg);
+    font-family: Arial, sans-serif;
+    background-image: url('https://raw.githubusercontent.com/juanalfonso27/reproductor-/main/iasa.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0;
