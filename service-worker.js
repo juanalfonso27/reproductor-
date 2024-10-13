@@ -45,12 +45,3 @@ self.addEventListener('fetch', event => {
     }
 });
 
-// Limitar el tamaño de la caché (ej. 10 videos)
-async function limitCacheSize(cacheName, maxSize) {
-    const cache = await caches.open(cacheName);
-    const keys = await cache.keys();
-    if (keys.length > maxSize) {
-        await cache.delete(keys[0]);
-        limitCacheSize(cacheName, maxSize);  // Eliminar el elemento más antiguo
-    }
-}
