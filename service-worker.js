@@ -50,6 +50,7 @@ async function limitCacheSize(cacheName, maxSize) {
     const cache = await caches.open(cacheName);
     const keys = await cache.keys();
     if (keys.length > maxSize) {
-        cache.delete(keys[0]).then(() => limitCacheSize(cacheName, maxSize));  // Eliminar el elemento más antiguo
+        await cache.delete(keys[0]);
+        limitCacheSize(cacheName, maxSize);  // Eliminar el elemento más antiguo
     }
 }
