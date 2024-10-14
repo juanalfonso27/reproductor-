@@ -1,64 +1,72 @@
-const CACHE_NAME = 'video-cache-v1';
-const urlsToCache = [
-    // Aquí puedes agregar rutas estáticas si es necesario
-];
+// Nombre de la base de datos y la versión
+const DB_NAME = 'videoDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'videos';
 
-// Instalación del Service Worker
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('Archivos cacheados');
-                return cache.addAll(urlsToCache);
-            })
-    );
-    console.log('Service Worker instalado');
-});
+// Función para abrir o crear la base de datos en IndexedDB
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            // Crea el almacén de videos si no existe
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'url' });
+            }
+        };
 
-// Activación del Service Worker
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Eliminando caché antigua', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-    console.log('Service Worker activado');
-});
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
 
-// Interceptar solicitudes de red para verificar si están cacheadas
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
-                    return response; // Si está en caché, devuelve la respuesta cacheada
-                }
-                return fetch(event.request); // Si no, realiza la solicitud de red
-            })
-    );
-});
-
-// Escuchar mensajes enviados desde la página
-self.addEventListener('message', (event) => {
-    if (event.data.action === 'cacheVideo' && event.data.url) {
-        cacheVideo(event.data.url);
-    }
-});
-
-// Función para cachear videos
-async function cacheVideo(videoUrl) {
-    try {
-        const cache = await caches.open(CACHE_NAME);
-        await cache.add(videoUrl);
-        console.log(`Video cacheado exitosamente: ${videoUrl}`);
-    } catch (error) {
-        console.error('Error al cachear el video:', error);
-    }
+        request.onerror = (event) => {
+            reject(event.target.error);
+        };
+    });
 }
+
+// Función para guardar un video en IndexedDB
+function saveVideo(url, videoBlob) {
+    openDB().then((db) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put({ url: url, videoBlob: videoBlob });
+        return tx.complete;
+    }).catch((error) => {
+        console.error('Error al guardar video en IndexedDB:', error);
+    });
+}
+
+// Función para obtener un video desde IndexedDB
+function getVideoFromDB(url) {
+    return openDB().then((db) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        return store.get(url);
+    });
+}
+
+// Intercepta las solicitudes de los videos
+self.addEventListener('fetch', (event) => {
+    const url = event.request.url;
+    if (url.endsWith('.mp4') || url.endsWith('.mov')) {
+        event.respondWith(
+            getVideoFromDB(url).then((cachedVideo) => {
+                if (cachedVideo) {
+                    // Si el video ya está cacheado, devuélvelo
+                    return new Response(cachedVideo.videoBlob);
+                } else {
+                    // Si no está en cache, busca el video, guárdalo en IndexedDB y luego respóndelo
+                    return fetch(event.request).then((response) => {
+                        return response.blob().then((videoBlob) => {
+                            saveVideo(url, videoBlob);
+                            return new Response(videoBlob);
+                        });
+                    });
+                }
+            })
+        );
+    }
+});
+
