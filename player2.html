@@ -28,45 +28,67 @@
             width: 100%;
             height: 100%;
         }
-        video {
+        /* Estilos para el video */
+        iframe {
             width: 100%;
             height: 100%;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            object-fit: cover;
+            object-fit: cover; /* Asegura que el video cubra toda el área del contenedor */
+        }
+        /* Media queries para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                height: 100%;
+            }
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        /* Media queries para pantallas grandes */
+        @media (min-width: 1200px) {
+            .container {
+                width: 100%;
+                height: 100%;
+            }
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
         }
     </style>
     <title>Reproductor de Videos</title>
+</head>
+<body>
+    <div id="videoList" class="container"></div>
     <script>
         let videoUrls = [
-            "https://drive.google.com/file/d/1tMdcudTwlmT-Sy7zeGqUJTpA4HxouMbr/preview",
-            "https://drive.google.com/file/d/1RPCC8dMuYFH_Z_drBhbCkN_E4n35NSv2/preview",
-            "https://drive.google.com/file/d/1b2P2gpihEphL5CGMVaR61-eiSs-ZLmqo/preview",
-            "https://drive.google.com/file/d/1C8F5z2yEqPOb6-7FaNBXiCfdeekOeBFQ/preview"
+            'https://drive.google.com/file/d/1tMdcudTwlmT-Sy7zeGqUJTpA4HxouMbr/preview',
+            'https://drive.google.com/file/d/1b2P2gpihEphL5CGMVaR61-eiSs-ZLmqo/preview',
+            'https://drive.google.com/file/d/1RPCC8dMuYFH_Z_drBhbCkN_E4n35NSv2/preview',
+            'https://drive.google.com/file/d/1C8F5z2yEqPOb6-7FaNBXiCfdeekOeBFQ/preview'
         ];
-
         let currentVideoIndex = 0;
 
         function playVideo() {
             if (videoUrls.length === 0) return;
-            const videoElement = document.createElement("video");
-            videoElement.src = videoUrls[currentVideoIndex];
-            videoElement.controls = true;
-            videoElement.autoplay = true;
-            videoElement.width = 600;
-            videoElement.onended = () => {
+            const iframeElement = document.createElement("iframe");
+            iframeElement.src = videoUrls[currentVideoIndex];
+            iframeElement.width = 600;
+            iframeElement.height = 400;
+            iframeElement.allow = "autoplay";
+            iframeElement.onended = () => {
                 currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
                 playVideo();
             };
             const videoList = document.getElementById("videoList");
             videoList.innerHTML = "";
-            videoList.appendChild(videoElement);
+            videoList.appendChild(iframeElement);
         }
 
         window.onload = playVideo;
     </script>
-</head>
-<body>
-    <div id="videoList" class="container"></div>
 </body>
 </html>
