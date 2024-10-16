@@ -29,49 +29,28 @@
             height: 100%;
         }
 
-        video {
+        iframe {
             width: 100%;
             height: 100%;
             border-radius: 8px;
-            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
         }
     </style>
     <title>Reproductor de Videos</title>
-    <script>
-        let videoUrls = [
-            "https://drive.google.com/uc?export=download&id=1tMdcudTwlmT-Sy7zeGqUJTpA4HxouMbr",
-            "https://drive.google.com/uc?export=download&id=1b2P2gpihEphL5CGMVaR61-eiSs-ZLmqo",
-            "https://drive.google.com/uc?export=download&id=1RPCC8dMuYFH_Z_drBhbCkN_E4n35NSv2",
-            "https://drive.google.com/uc?export=download&id=1C8F5z2yEqPOb6-7FaNBXiCfdeekOeBFQ"
-        ];
-
-        let currentVideoIndex = 0;
-
-        function playVideo() {
-            const videoElement = document.getElementById("videoPlayer");
-            videoElement.src = videoUrls[currentVideoIndex];
-            videoElement.play();
-        }
-
-        function nextVideo() {
-            currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
-            playVideo();
-        }
-
-        window.onload = () => {
-            const videoElement = document.getElementById("videoPlayer");
-
-            // Reproduce el siguiente video cuando termine el actual
-            videoElement.onended = nextVideo;
-
-            // Inicia la reproducción
-            playVideo();
-        };
-    </script>
 </head>
 <body>
     <div class="container">
-        <video id="videoPlayer" controls autoplay muted></video>
+        <iframe src="https://drive.google.com/file/d/1tMdcudTwlmT-Sy7zeGqUJTpA4HxouMbr/preview" allow="autoplay"></iframe>
+        <iframe src="https://drive.google.com/file/d/1b2P2gpihEphL5CGMVaR61-eiSs-ZLmqo/preview" allow="autoplay"></iframe>
+        <iframe src="https://drive.google.com/file/d/1RPCC8dMuYFH_Z_drBhbCkN_E4n35NSv2/preview" allow="autoplay"></iframe>
+        <iframe src="https://drive.google.com/file/d/1C8F5z2yEqPOb6-7FaNBXiCfdeekOeBFQ/preview" allow="autoplay"></iframe>
     </div>
 </body>
 </html>
