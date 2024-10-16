@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <style>
         /* Estilos generales */
         body {
@@ -17,7 +16,6 @@
             height: 100vh;
             background-color: #f0f0f0;
         }
-
         .container {
             display: flex;
             flex-direction: column;
@@ -30,7 +28,6 @@
             width: 100%;
             height: 100%;
         }
-
         /* Estilos para el video */
         video {
             width: 100%;
@@ -39,36 +36,30 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             object-fit: cover;
         }
-
         /* Media queries para pantallas pequeñas */
         @media (max-width: 600px) {
             .container {
                 width: 100%;
                 height: 100%;
             }
-
             video {
                 width: 100%;
                 height: 100%;
             }
         }
-
         /* Media queries para pantallas grandes */
         @media (min-width: 1200px) {
             .container {
                 width: 100%;
                 height: 100%;
             }
-
             video {
                 width: 100%;
                 height: 100%;
             }
         }
     </style>
-
     <title>Reproductor de Videos</title>
-
     <script>
         let videoUrls = [
             "https://drive.google.com/uc?export=download&id=1tMdcudTwlmT-Sy7zeGqUJTpA4HxouMbr", // Reemplaza los IDs
@@ -76,12 +67,11 @@
             "https://drive.google.com/uc?export=download&id=1b2P2gpihEphL5CGMVaR61-eiSs-ZLmqo",
             "https://drive.google.com/uc?export=download&id=1C8F5z2yEqPOb6-7FaNBXiCfdeekOeBFQ"
         ];
-
+        
         let currentVideoIndex = 0;
 
         function playVideo() {
             if (videoUrls.length === 0) return;
-
             const videoElement = document.createElement("video");
             videoElement.src = videoUrls[currentVideoIndex];
             videoElement.controls = true;
@@ -91,7 +81,6 @@
                 currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
                 playVideo();
             };
-
             const videoList = document.getElementById("videoList");
             videoList.innerHTML = "";
             videoList.appendChild(videoElement);
