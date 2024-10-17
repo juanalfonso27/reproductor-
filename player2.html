@@ -64,13 +64,8 @@
 <body>
     <div id="videoList" class="container"></div>
     <script>
-        let videoUrls = [
-            'Artur1.mp4',
-            'path/to/your/video3.mp4',
-            'path/to/your/video4.mp4'
-        ];
+        let videoUrls = ['Artur1.mp4', 'path/to/your/video3.mp4', 'path/to/your/video4.mp4'];
         let currentVideoIndex = 0;
-
         function playVideo() {
             if (videoUrls.length === 0) return;
             const videoElement = document.createElement("video");
@@ -86,9 +81,7 @@
             videoList.innerHTML = "";
             videoList.appendChild(videoElement);
         }
-
         window.onload = playVideo;
     </script>
 </body>
 </html>
-
